@@ -1,0 +1,19 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{B6930212-46CB-97E3-B84B-7BB6727F7C4E}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "MegaJam_2022_BoD",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "GameLiftServerSDK",
+			"Enabled": true
+		}
+	]
+}
