@@ -47,6 +47,7 @@ public class MegaJam_2022_BoD : ModuleRules
                    Path.Combine(ModuleDirectory, "Public"),
                    Path.Combine(ModuleDirectory, "Public/Online"),
                    Path.Combine(ModuleDirectory, "Public/GameLift"),
+                   Path.Combine(ModuleDirectory, "Public/Widget"),
                    Path.Combine(GameLiftPath, "Public")
                 }
             );
