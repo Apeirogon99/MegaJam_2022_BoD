@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-GameLiftServerSDK.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Program Files\Epic Games\UnrealEngine-4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.obj"
+"P:\Template_Gamelift\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\GameLiftServerSDK.cpp.obj"
+"C:\Program Files\Epic Games\UnrealEngine-4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+/OUT:"P:\Template_Gamelift\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\UE4Editor-GameLiftServerSDK.lib"
