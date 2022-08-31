@@ -3,14 +3,14 @@
 !*/
 
 #Local Folder
-Local/
+Local/**
 
 #UnrealBuilds Folder
-UnrealBuilds/
+UnrealBuilds/**
 
 #GameLiftSDK
-Plugins/GameLiftServerSDK/Intermediate/
-Plugins/GameLiftServerSDK/Binaries/
+Plugins/GameLiftServerSDK/Intermediate/**
+Plugins/GameLiftServerSDK/Binaries/**
 
 # Do not ignore git files in the root of the repo.
 !/.git*
