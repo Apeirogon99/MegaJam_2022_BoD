@@ -6,7 +6,7 @@
 
 AMegaJam_2022_BoDGameModeBase::AMegaJam_2022_BoDGameModeBase()
 {
-    GameLiftLocalTest();
+    //GameLiftLocalTest();
 }
 
 void AMegaJam_2022_BoDGameModeBase::GameLiftLocalTest()
