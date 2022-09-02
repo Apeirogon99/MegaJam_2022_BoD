@@ -39,9 +39,25 @@ public:
 	UFUNCTION()
 		void Click_SingUp();
 
+	UFUNCTION()
+		void Click_Exit();
+
+protected:
+	UFUNCTION()
+		void CheckSingUp();
+
+	UFUNCTION()
+		bool isSpecial(int _C);
+
 private:
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* m_singUpLog;
+		UTextBlock* m_singUpResultLog;
+
+	UPROPERTY(Meta = (BindWidget))
+		UTextBlock* m_userNameLog;
+
+	UPROPERTY(Meta = (BindWidget))
+		UTextBlock* m_emailLog;
 
 	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* m_lowerCaseLog;
@@ -70,19 +86,31 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 		UButton* m_singUp;
 
-private:
-	UPROPERTY()
+	UPROPERTY(Meta = (BindWidget))
+		UButton* m_exit;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Case")
 		bool  m_bLowerCase;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Case")
 		bool  m_bUpperCase;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Case")
 		bool  m_bSpeicalCase;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Case")
 		bool  m_bNumberCase;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Case")
 		bool  m_bLeastCharacterCase;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Case")
+		bool  m_buserNameCase;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Case")
+		bool  m_bemailCase;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Action")
+		bool  m_bCanSingUp;
 };
