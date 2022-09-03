@@ -20,7 +20,10 @@ public class MegaJam_2022_BoD : ModuleRules
                     "Engine", 
                     "InputCore",
                     "UMG",
-                    "GameLiftServerSDK"
+                    "GameLiftServerSDK",
+                    "Http",
+                    "Json",
+                    "JsonUtilities"
                 }
             );
 

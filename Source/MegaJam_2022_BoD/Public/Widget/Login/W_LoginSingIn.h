@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Http.h"
 #include "W_LoginSingIn.generated.h"
 
 /**
@@ -57,10 +58,25 @@ public:
 	UPROPERTY(Meta = (BindWidget))
 		UButton* m_singIn;
 
-private:
-	UPROPERTY()
+public:
+	UPROPERTY(EditAnywhere)
 		FString m_currentUserName;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 		FString m_currentPassword;
+
+	UPROPERTY(EditAnywhere)
+		FString m_ApiGatewayEndpoint;
+
+	UPROPERTY(EditAnywhere)
+		FString m_LoginURI;
+
+private:
+
+	FHttpModule* Http;
+
+	void AwsLoginInit();
+	void LoginRequest(FString usr, FString pwd);
+	void OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
 };

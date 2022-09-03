@@ -6,6 +6,8 @@
 #include <Components/TextBlock.h>
 #include <Components/Button.h>
 #include <Kismet/GameplayStatics.h>
+#include "Json.h"
+#include "JsonUtilities/Public/JsonUtilities.h"
 
 void UW_LoginSingUp::NativeConstruct()
 {
@@ -19,10 +21,10 @@ void UW_LoginSingUp::NativeConstruct()
 	m_bLeastCharacterCase	= false;
 	m_buserNameCase			= false;
 	m_bemailCase			= false;
-	m_bCanSingUp			= false;
+	m_bCanSignUp			= false;
 
 	//SingUp Log
-	m_singUpResultLog		= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_singUpResultLog")));
+	m_signUpResultLog		= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_singUpResultLog")));
 
 	//Case Log
 	m_userNameLog			= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_userNameLog")));
@@ -39,7 +41,7 @@ void UW_LoginSingUp::NativeConstruct()
 	m_password				= Cast<UEditableTextBox>(GetWidgetFromName(TEXT("m_password")));
 
 	//Button
-	m_singUp				= Cast<UButton>(GetWidgetFromName(TEXT("m_singUp")));
+	m_signUp				= Cast<UButton>(GetWidgetFromName(TEXT("m_singUp")));
 	m_exit					= Cast<UButton>(GetWidgetFromName(TEXT("m_exit")));
 
 	//TextBlock
@@ -68,15 +70,17 @@ void UW_LoginSingUp::NativeConstruct()
 	}
 
 	//OnClick Button
-	if (m_singUp != nullptr)
+	if (m_signUp != nullptr)
 	{
-		m_singUp->OnClicked.AddDynamic(this, &UW_LoginSingUp::Click_SingUp);
+		m_signUp->OnClicked.AddDynamic(this, &UW_LoginSingUp::Click_SignUp);
 	}
 
 	if (m_exit != nullptr)
 	{
 		m_exit->OnClicked.AddDynamic(this, &UW_LoginSingUp::Click_Exit);
 	}
+
+	AwsSignInit();
 
 }
 
@@ -97,7 +101,9 @@ void UW_LoginSingUp::Committed_UserName(const FText& message, ETextCommit::Type 
 			m_buserNameCase = false;
 		}
 
-		CheckSingUp();
+		m_currentUsername = Fmessage;
+
+		CheckSignUp();
 	}
 }
 
@@ -121,7 +127,9 @@ void UW_LoginSingUp::Committed_Email(const FText& message, ETextCommit::Type com
 			m_bemailCase = false;
 		}
 
-		CheckSingUp();
+		m_currentEmail = Fmessage;
+
+		CheckSignUp();
 	}
 }
 
@@ -157,14 +165,16 @@ void UW_LoginSingUp::Committed_Password(const FText& message, ETextCommit::Type 
 		m_bNumberCase = number ? true : false;
 		m_bLeastCharacterCase = (Fmessage.Len() >= 8) ? true : false;
 
-		CheckSingUp();
+		m_currentPassword = Fmessage;
+
+		CheckSignUp();
 	}
 }
 
-void UW_LoginSingUp::Click_SingUp()
+void UW_LoginSingUp::Click_SignUp()
 {
-	m_singUpResultLog->SetVisibility(ESlateVisibility::Hidden);
-	m_singUpResultLog->SetVisibility(ESlateVisibility::Visible);
+	if(m_bCanSignUp)
+		SignUpRequest(m_currentUsername, m_currentPassword, m_currentEmail);
 }
 
 void UW_LoginSingUp::Click_Exit()
@@ -172,15 +182,19 @@ void UW_LoginSingUp::Click_Exit()
 	this->RemoveFromParent();
 }
 
-void UW_LoginSingUp::CheckSingUp()
+void UW_LoginSingUp::CheckSignUp()
 {
 	if (m_bLowerCase && m_bUpperCase && m_bSpeicalCase && m_bNumberCase && m_bLeastCharacterCase && m_buserNameCase && m_bemailCase)
 	{
-		m_bCanSingUp = true;
+		FLinearColor ActiveColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		m_signUp->SetBackgroundColor(ActiveColor);
+		m_bCanSignUp = true;
 	}
 	else
 	{
-		m_bCanSingUp = false;
+		FLinearColor inactiveColor = FLinearColor(1.0f, 1.0f, 1.0f, 0.4f);
+		m_signUp->SetBackgroundColor(inactiveColor);
+		m_bCanSignUp = false;
 	}
 
 }
@@ -196,4 +210,56 @@ bool UW_LoginSingUp::isSpecial(int _C)
 	}
 
 	return false;
+}
+
+void UW_LoginSingUp::AwsSignInit()
+{
+	Http = &FHttpModule::Get();
+
+	m_ApiGatewayEndpoint = FString::Printf(TEXT("https://llya2kr955.execute-api.ap-northeast-2.amazonaws.com/betaTest01"));
+	m_SignUpURI = FString::Printf(TEXT("/singup"));
+}
+
+void UW_LoginSingUp::SignUpRequest(FString usr, FString pwd, FString emi)
+{
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+	JsonObject->SetStringField(TEXT("username"), *FString::Printf(TEXT("%s"), *usr));
+	JsonObject->SetStringField(TEXT("password"), *FString::Printf(TEXT("%s"), *pwd));
+	JsonObject->SetStringField(TEXT("email"), *FString::Printf(TEXT("%s"), *emi));
+
+	FString JsonBody;
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&JsonBody);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> SignUpHttpRequest = Http->CreateRequest();
+
+	SignUpHttpRequest->SetVerb("POST");
+	SignUpHttpRequest->SetURL(m_ApiGatewayEndpoint + m_SignUpURI);
+	SignUpHttpRequest->SetHeader("Content-Type", "application/json");
+	SignUpHttpRequest->SetContentAsString(JsonBody);
+	SignUpHttpRequest->OnProcessRequestComplete().BindUObject(this, &UW_LoginSingUp::OnSignUpResponse);
+	SignUpHttpRequest->ProcessRequest();
+}
+
+void UW_LoginSingUp::OnSignUpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	if (bWasSuccessful) {
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+		if (FJsonSerializer::Deserialize(Reader, JsonObject)) {
+
+			FString Status = JsonObject->GetStringField("status");
+			if (Status == TEXT("success"))
+			{
+				this->RemoveFromParent();
+			}
+			else if(Status == TEXT("fail"))
+			{
+				FString msg = JsonObject->GetStringField("msg");
+				m_signUpResultLog->SetVisibility(ESlateVisibility::Visible);
+				m_signUpResultLog->SetText(FText::FromString(msg));
+			}
+		}
+	}
 }

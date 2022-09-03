@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Http.h"
 #include "W_LoginSingUp.generated.h"
 
 /**
@@ -37,21 +38,21 @@ public:
 		void Committed_Password(const FText& message, ETextCommit::Type commitType);
 
 	UFUNCTION()
-		void Click_SingUp();
+		void Click_SignUp();
 
 	UFUNCTION()
 		void Click_Exit();
 
 protected:
 	UFUNCTION()
-		void CheckSingUp();
+		void CheckSignUp();
 
 	UFUNCTION()
 		bool isSpecial(int _C);
 
 private:
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* m_singUpResultLog;
+		UTextBlock* m_signUpResultLog;
 
 	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* m_userNameLog;
@@ -84,7 +85,7 @@ private:
 		UEditableTextBox* m_password;
 
 	UPROPERTY(Meta = (BindWidget))
-		UButton* m_singUp;
+		UButton* m_signUp;
 
 	UPROPERTY(Meta = (BindWidget))
 		UButton* m_exit;
@@ -112,5 +113,28 @@ public:
 		bool  m_bemailCase;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Action")
-		bool  m_bCanSingUp;
+		bool  m_bCanSignUp;
+
+	UPROPERTY(EditAnywhere)
+		FString m_currentUsername;
+
+	UPROPERTY(EditAnywhere)
+		FString m_currentPassword;
+
+	UPROPERTY(EditAnywhere)
+		FString m_currentEmail;
+
+	UPROPERTY(EditAnywhere)
+		FString m_ApiGatewayEndpoint;
+
+	UPROPERTY(EditAnywhere)
+		FString m_SignUpURI;
+
+
+private:
+	FHttpModule* Http;
+
+	void AwsSignInit();
+	void SignUpRequest(FString usr, FString pwd, FString emi);
+	void OnSignUpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 };
