@@ -71,7 +71,7 @@ void UW_LoginSingIn::Committed_Password(const FText& message, ETextCommit::Type 
 void UW_LoginSingIn::Click_AddToSingUp()
 {
 	APC_Login* playerController = Cast<APC_Login>(GetWorld()->GetFirstPlayerController());
-	playerController->ShowWidget(WidgetType::LOGIN_SINGUP);
+	playerController->CreateLoginWidgets(WidgetType::LOGIN_SINGUP);
 }
 
 void UW_LoginSingIn::Click_SingIn()

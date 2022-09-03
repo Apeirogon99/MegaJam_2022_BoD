@@ -11,6 +11,7 @@
  * 
  */
 
+class UW_LoginVerification;
 class UEditableTextBox;
 class UTextBlock;
 class UButton;

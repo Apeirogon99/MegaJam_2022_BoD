@@ -13,13 +13,15 @@
 class UW_LoginMain;
 class UW_LoginSingIn;
 class UW_LoginSingUp;
+class UW_LoginVerification;
 
 UENUM()
 enum class WidgetType : uint8
 {
 	LOGIN_MAIN,
 	LOGIN_SINGIN,
-	LOGIN_SINGUP
+	LOGIN_SINGUP,
+	LOGIN_VERIFICATION
 };
 
 UCLASS()
@@ -37,10 +39,11 @@ protected:
 
 public:
 	UFUNCTION()
-		void ShowWidget(WidgetType type);
+		UUserWidget* CreateLoginWidgets(WidgetType type);
 
 public:
 	TSubclassOf<UW_LoginMain> m_loginMain;
 	TSubclassOf<UW_LoginSingIn> m_loginSingIn;
 	TSubclassOf<UW_LoginSingUp> m_loginSingUp;
+	TSubclassOf<UW_LoginVerification> m_loginVerification;
 };

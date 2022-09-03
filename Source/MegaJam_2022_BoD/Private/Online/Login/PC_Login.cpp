@@ -5,6 +5,7 @@
 #include "Widget/Login/W_LoginMain.h"
 #include "Widget/Login/W_LoginSingIn.h"
 #include "Widget/Login/W_LoginSingUp.h"
+#include "Widget/Login/W_LoginVerification.h"
 #include "Blueprint/UserWidget.h"
 
 APC_Login::APC_Login()
@@ -24,7 +25,7 @@ void APC_Login::BeginPlay()
 	Mode.SetHideCursorDuringCapture(true);
 	SetInputMode(Mode);
 
-	ShowWidget(WidgetType::LOGIN_MAIN);
+	CreateLoginWidgets(WidgetType::LOGIN_MAIN);
 }
 
 void APC_Login::LoadLoginWidgets()
@@ -46,9 +47,15 @@ void APC_Login::LoadLoginWidgets()
 	{
 		m_loginSingUp = loginSingUpWidget.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<UW_LoginVerification> VerificationWidget(TEXT("Blueprint'/Game/MegaJam_2022_BoD/Widget/Login/WB_LoginVeritication.WB_LoginVeritication_C'"));
+	if (VerificationWidget.Succeeded())
+	{
+		m_loginVerification = VerificationWidget.Class;
+	}
 }
 
-void APC_Login::ShowWidget(WidgetType type)
+UUserWidget* APC_Login::CreateLoginWidgets(WidgetType type)
 {
 	UUserWidget* NewWidgetClass = nullptr;
 
@@ -63,6 +70,9 @@ void APC_Login::ShowWidget(WidgetType type)
 	case WidgetType::LOGIN_SINGUP:
 		NewWidgetClass = CreateWidget(GetWorld(), m_loginSingUp);
 		break;
+	case WidgetType::LOGIN_VERIFICATION:
+		NewWidgetClass = CreateWidget(GetWorld(), m_loginVerification);
+		break;
 	default:
 		break;
 	}
@@ -71,5 +81,7 @@ void APC_Login::ShowWidget(WidgetType type)
 	{
 		NewWidgetClass->AddToViewport();
 	}
+
+	return NewWidgetClass;
 
 }

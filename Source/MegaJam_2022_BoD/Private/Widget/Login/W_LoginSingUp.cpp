@@ -2,6 +2,8 @@
 
 
 #include "Widget/Login/W_LoginSingUp.h"
+#include "Widget/Login/W_LoginVerification.h"
+#include "Online/Login/PC_Login.h"
 #include <Components/EditableTextBox.h>
 #include <Components/TextBlock.h>
 #include <Components/Button.h>
@@ -24,7 +26,7 @@ void UW_LoginSingUp::NativeConstruct()
 	m_bCanSignUp			= false;
 
 	//SingUp Log
-	m_signUpResultLog		= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_singUpResultLog")));
+	m_signUpResultLog		= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_signUpResultLog")));
 
 	//Case Log
 	m_userNameLog			= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_userNameLog")));
@@ -36,12 +38,14 @@ void UW_LoginSingUp::NativeConstruct()
 	m_leastNumberCaseLog	= Cast<UTextBlock>(GetWidgetFromName(TEXT("m_leastNumberCaseLog")));
 
 	//EditBox
+
 	m_username				= Cast<UEditableTextBox>(GetWidgetFromName(TEXT("m_username")));
 	m_email					= Cast<UEditableTextBox>(GetWidgetFromName(TEXT("m_email")));
 	m_password				= Cast<UEditableTextBox>(GetWidgetFromName(TEXT("m_password")));
 
 	//Button
-	m_signUp				= Cast<UButton>(GetWidgetFromName(TEXT("m_singUp")));
+
+	m_signUp				= Cast<UButton>(GetWidgetFromName(TEXT("m_signUp")));
 	m_exit					= Cast<UButton>(GetWidgetFromName(TEXT("m_exit")));
 
 	//TextBlock
@@ -70,6 +74,7 @@ void UW_LoginSingUp::NativeConstruct()
 	}
 
 	//OnClick Button
+
 	if (m_signUp != nullptr)
 	{
 		m_signUp->OnClicked.AddDynamic(this, &UW_LoginSingUp::Click_SignUp);
@@ -173,8 +178,15 @@ void UW_LoginSingUp::Committed_Password(const FText& message, ETextCommit::Type 
 
 void UW_LoginSingUp::Click_SignUp()
 {
-	if(m_bCanSignUp)
+	if (m_bCanSignUp)
+	{
 		SignUpRequest(m_currentUsername, m_currentPassword, m_currentEmail);
+	}
+	else
+	{
+		m_signUpResultLog->SetVisibility(ESlateVisibility::Visible);
+		//m_signUpResultLog->SetText(FText::FromString(TEXT("Check every case")));
+	}
 }
 
 void UW_LoginSingUp::Click_Exit()
@@ -186,14 +198,14 @@ void UW_LoginSingUp::CheckSignUp()
 {
 	if (m_bLowerCase && m_bUpperCase && m_bSpeicalCase && m_bNumberCase && m_bLeastCharacterCase && m_buserNameCase && m_bemailCase)
 	{
-		FLinearColor ActiveColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		m_signUp->SetBackgroundColor(ActiveColor);
+		//FLinearColor ActiveColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		//m_signUp->SetBackgroundColor(ActiveColor);
 		m_bCanSignUp = true;
 	}
 	else
 	{
-		FLinearColor inactiveColor = FLinearColor(1.0f, 1.0f, 1.0f, 0.4f);
-		m_signUp->SetBackgroundColor(inactiveColor);
+		//FLinearColor inactiveColor = FLinearColor(1.0f, 1.0f, 1.0f, 0.4f);
+		//m_signUp->SetBackgroundColor(inactiveColor);
 		m_bCanSignUp = false;
 	}
 
@@ -222,6 +234,7 @@ void UW_LoginSingUp::AwsSignInit()
 
 void UW_LoginSingUp::SignUpRequest(FString usr, FString pwd, FString emi)
 {
+	UE_LOG(LogTemp, Log, TEXT("SignUpRequest"));
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 	JsonObject->SetStringField(TEXT("username"), *FString::Printf(TEXT("%s"), *usr));
 	JsonObject->SetStringField(TEXT("password"), *FString::Printf(TEXT("%s"), *pwd));
@@ -243,6 +256,7 @@ void UW_LoginSingUp::SignUpRequest(FString usr, FString pwd, FString emi)
 
 void UW_LoginSingUp::OnSignUpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	UE_LOG(LogTemp, Log, TEXT("OnSignUpResponse"));
 	if (bWasSuccessful) {
 		TSharedPtr<FJsonObject> JsonObject;
 		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
@@ -252,6 +266,10 @@ void UW_LoginSingUp::OnSignUpResponse(FHttpRequestPtr Request, FHttpResponsePtr 
 			FString Status = JsonObject->GetStringField("status");
 			if (Status == TEXT("success"))
 			{
+				APC_Login* Controller = Cast<APC_Login>(GetWorld()->GetFirstPlayerController());
+				UW_LoginVerification* verificationWidget = Cast<UW_LoginVerification>(Controller->CreateLoginWidgets(WidgetType::LOGIN_VERIFICATION));
+				verificationWidget->SetUsername(m_currentUsername);
+				
 				this->RemoveFromParent();
 			}
 			else if(Status == TEXT("fail"))
