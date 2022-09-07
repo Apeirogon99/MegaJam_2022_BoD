@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Http.h"
+#include "GameLift/GameLiftLambda.h"
 #include "W_LoginSingIn.generated.h"
 
 /**
@@ -72,8 +72,7 @@ public:
 		FString m_LoginURI;
 
 private:
-
-	FHttpModule* Http;
+	GameLiftLambda m_lambda;
 
 	void AwsLoginInit();
 	void LoginRequest(FString usr, FString pwd);

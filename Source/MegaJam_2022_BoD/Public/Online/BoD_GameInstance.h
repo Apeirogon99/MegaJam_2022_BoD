@@ -14,4 +14,10 @@ class MEGAJAM_2022_BOD_API UBoD_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(EditAnywhere)
+		FString m_nickName;
+
+	UPROPERTY(EditAnywhere)
+		FString m_TokenID;
 };

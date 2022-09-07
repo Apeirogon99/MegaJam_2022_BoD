@@ -12,6 +12,7 @@ APC_Login::APC_Login()
 {
 	SetShowMouseCursor(true);
 
+
 	LoadLoginWidgets();
 
 }
