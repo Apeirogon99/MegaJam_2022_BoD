@@ -25,7 +25,6 @@ void UW_LobbyFindSession::NativeConstruct()
 	{
 		m_FindSession->OnClicked.AddDynamic(this, &UW_LobbyFindSession::Click_FindSession);
 	}
-
 }
 
 void UW_LobbyFindSession::Click_FindSession()
@@ -52,6 +51,7 @@ void UW_LobbyFindSession::OnFindSessionResponse(FHttpRequestPtr Request, FHttpRe
 	if (!IsValid(m_RoomListWidget))
 	{
 		m_RoomListWidget = Cast<UW_LobbyRoomList>(CreateWidget(GetWorld(), m_RoomListWidgetClass));
+		m_RoomListWidget->AddToViewport(1);
 	}
 
 	auto GameSessionArray = JsonObject->GetArrayField("GameSessions");
@@ -71,5 +71,5 @@ void UW_LobbyFindSession::OnFindSessionResponse(FHttpRequestPtr Request, FHttpRe
 	}
 
 	m_RoomListWidget->UpdateRoomList(gameSessionsInfos);
-	m_RoomListWidget->AddToViewport(1);
+	m_RoomListWidget->SetVisibility(ESlateVisibility::Visible);
 }

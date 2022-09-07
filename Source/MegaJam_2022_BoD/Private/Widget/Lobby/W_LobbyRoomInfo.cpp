@@ -25,6 +25,16 @@ void UW_LobbyRoomInfo::NativeConstruct()
 	}
 }
 
+void UW_LobbyRoomInfo::NativeOnListItemObjectSet(UObject* ListItemObject)
+{
+	
+}
+
+void UW_LobbyRoomInfo::NativeOnItemSelectionChanged(bool bIsSelected)
+{
+
+}
+
 void UW_LobbyRoomInfo::SetRoomListParent(UW_LobbyRoomList* owner)
 {
 	m_owner = owner;
@@ -42,6 +52,10 @@ void UW_LobbyRoomInfo::Click_Room()
 void UW_LobbyRoomInfo::SetRoomInfo(FGameSessionsInfo info)
 {
 	m_info = info;
+
+	m_curPlayer->SetText(FText::FromString(FString::FromInt(m_info.m_CurrentPlayerSessionCount)));
+	m_maxPlayer->SetText(FText::FromString(FString::FromInt(m_info.m_MaximumPlayerSessionCount)));
+	m_location->SetText(FText::FromString(GameLiftUtils::LocationToString(m_info.m_Location)));
 }
 
 FString UW_LobbyRoomInfo::GetLevel()

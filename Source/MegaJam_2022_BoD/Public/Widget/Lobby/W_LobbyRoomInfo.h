@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GameLift/GameLiftCallbackStructs.h"
 #include "Widget/Lobby/W_LobbyRoomList.h"
+#include "Blueprint/IUserObjectListEntry.h"
 #include "W_LobbyRoomInfo.generated.h"
 
 /**
@@ -18,7 +19,7 @@ class UW_LobbyRoomList;
 struct FGameSessionsInfo;
 
 UCLASS()
-class MEGAJAM_2022_BOD_API UW_LobbyRoomInfo : public UUserWidget
+class MEGAJAM_2022_BOD_API UW_LobbyRoomInfo : public UUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
@@ -28,6 +29,10 @@ public:
 	virtual void NativeConstruct() override;
 	//virtual void NativeDestruct() override;
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
+
+
+	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+	virtual void NativeOnItemSelectionChanged(bool bIsSelected) override;
 
 public:
 	UPROPERTY(Meta = (BindWidget))

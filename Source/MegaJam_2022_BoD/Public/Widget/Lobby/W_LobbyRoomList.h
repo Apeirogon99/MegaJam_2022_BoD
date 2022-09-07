@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "GameLift/GameLiftCallbackStructs.h"
 #include "W_LobbyRoomList.generated.h"
 
 /**
@@ -12,6 +13,7 @@
 
 class UButton;
 class UTextBlock;
+class UListView;
 class UW_LobbyRoomInfo;
 struct FGameSessionsInfo;
 
@@ -39,6 +41,9 @@ public:
 	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* m_roomListLog;
 
+	UPROPERTY(Meta = (BindWidget))
+		UListView* m_roomListView;
+
 public:
 	UFUNCTION()
 		void Click_JoinRoom();
@@ -51,9 +56,8 @@ public:
 
 
 public:
-
 	UFUNCTION()
-		void UpdateRoomList(TArray<FGameSessionsInfo> infos);
+		void UpdateRoomList(TArray<FGameSessionsInfo>& infos);
 
 	UFUNCTION()
 		void SetClickLevel(FString level);
@@ -62,9 +66,9 @@ private:
 	UPROPERTY()
 		FString m_currentClickLevel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<UW_LobbyRoomInfo> m_RoomInfoClass;
 
 	UPROPERTY()
-		TArray<UW_LobbyRoomInfo> m_SearchRoomInfos;
+		TArray<UW_LobbyRoomInfo*> m_SearchRoomInfos;
 };

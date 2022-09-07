@@ -7,6 +7,7 @@
 #include "Widget/Lobby/W_LobbyRoomInfo.h"
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
+#include <Components/ListView.h>
 #include <Kismet/GameplayStatics.h>
 
 void UW_LobbyRoomList::NativeConstruct()
@@ -16,6 +17,8 @@ void UW_LobbyRoomList::NativeConstruct()
 	m_joinRoom = Cast<UButton>(GetWidgetFromName(TEXT("m_joinRoom")));
 	m_refresh = Cast<UButton>(GetWidgetFromName(TEXT("m_refresh")));
 	m_exit = Cast<UButton>(GetWidgetFromName(TEXT("m_exit")));
+
+	m_roomListView = Cast<UListView>(GetWidgetFromName(TEXT("m_roomListView")));
 
 	m_roomListLog = Cast<UTextBlock>(GetWidgetFromName(TEXT("m_roomListLog")));
 	m_roomListLog->SetVisibility(ESlateVisibility::Hidden);
@@ -60,8 +63,7 @@ void UW_LobbyRoomList::Click_JoinRoom()
 
 void UW_LobbyRoomList::Click_Refresh()
 {
-	m_roomListLog->SetText(FText::FromString("Searching..."));
-	m_roomListLog->SetVisibility(ESlateVisibility::Visible);
+	m_roomListView->ClearListItems();
 }
 
 void UW_LobbyRoomList::Click_Exit()
@@ -69,7 +71,7 @@ void UW_LobbyRoomList::Click_Exit()
 	this->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UW_LobbyRoomList::UpdateRoomList(TArray<FGameSessionsInfo> infos)
+void UW_LobbyRoomList::UpdateRoomList(TArray<FGameSessionsInfo>& infos)
 {
 	if (infos.Num() == 0)
 	{
@@ -79,6 +81,8 @@ void UW_LobbyRoomList::UpdateRoomList(TArray<FGameSessionsInfo> infos)
 	}
 	else
 	{
+		m_roomListView->ClearListItems();
+
 		if (IsValid(m_RoomInfoClass))
 		{
 			for (FGameSessionsInfo SessionsInfo : infos)
@@ -86,9 +90,14 @@ void UW_LobbyRoomList::UpdateRoomList(TArray<FGameSessionsInfo> infos)
 				UW_LobbyRoomInfo* roomInfoWidget = CreateWidget<UW_LobbyRoomInfo>(GetWorld(), m_RoomInfoClass);
 				roomInfoWidget->SetRoomListParent(this);
 				roomInfoWidget->SetRoomInfo(SessionsInfo);
+
+				m_roomListView->AddItem(roomInfoWidget);
+
 				m_SearchRoomInfos.Add(roomInfoWidget);
 			}
 		}
+
+		m_roomListView->RegenerateAllEntries();
 	}
 }
 
