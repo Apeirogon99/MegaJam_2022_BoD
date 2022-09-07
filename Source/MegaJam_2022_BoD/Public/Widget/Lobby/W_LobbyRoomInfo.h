@@ -15,6 +15,7 @@
 
 class UButton;
 class UTextBlock;
+class UBorder;
 class UW_LobbyRoomList;
 struct FGameSessionsInfo;
 
@@ -36,9 +37,6 @@ public:
 
 public:
 	UPROPERTY(Meta = (BindWidget))
-		UButton* m_room;
-
-	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* m_host;
 
 	UPROPERTY(Meta = (BindWidget))
@@ -50,21 +48,21 @@ public:
 	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* m_location;
 
+	UPROPERTY(Meta = (BindWidget))
+		UBorder* m_border;
+
 public:
 	UFUNCTION()
 		void SetRoomListParent(UW_LobbyRoomList* owner);
 
 	UFUNCTION()
-		void Click_Room();
-
-	UFUNCTION()
-		void SetRoomInfo(FGameSessionsInfo info);
+		void SetRoomInfo(FGameSessionsInfo& info);
 
 	UFUNCTION()
 		FString GetLevel();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
 		FGameSessionsInfo m_info;
 
 	UPROPERTY()

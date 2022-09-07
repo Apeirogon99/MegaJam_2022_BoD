@@ -88,12 +88,13 @@ void UW_LobbyRoomList::UpdateRoomList(TArray<FGameSessionsInfo>& infos)
 			for (FGameSessionsInfo SessionsInfo : infos)
 			{
 				UW_LobbyRoomInfo* roomInfoWidget = CreateWidget<UW_LobbyRoomInfo>(GetWorld(), m_RoomInfoClass);
-				roomInfoWidget->SetRoomListParent(this);
-				roomInfoWidget->SetRoomInfo(SessionsInfo);
-
-				m_roomListView->AddItem(roomInfoWidget);
-
-				m_SearchRoomInfos.Add(roomInfoWidget);
+				if (roomInfoWidget)
+				{
+					roomInfoWidget->SetRoomListParent(this);
+					roomInfoWidget->SetRoomInfo(SessionsInfo);
+					m_roomListView->AddItem(roomInfoWidget);
+					m_SearchRoomInfos.Add(roomInfoWidget);
+				}
 			}
 		}
 
