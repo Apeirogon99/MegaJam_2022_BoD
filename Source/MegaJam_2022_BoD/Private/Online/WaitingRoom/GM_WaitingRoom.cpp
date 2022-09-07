@@ -23,6 +23,13 @@ AGM_WaitingRoom::AGM_WaitingRoom()
 	TestAWSStartServer();
 }
 
+void AGM_WaitingRoom::BeginPlay()
+{
+	FString description;
+	m_travelLevelName = FString::Printf(TEXT("L_Battle"));
+	TravelLevel(m_travelLevelName, description);
+}
+
 void AGM_WaitingRoom::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);

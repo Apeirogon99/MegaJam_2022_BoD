@@ -25,6 +25,7 @@ public:
 	AGM_WaitingRoom();
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void BeginPlay() override;
 
 public:
 	UFUNCTION(BlueprintCallable)

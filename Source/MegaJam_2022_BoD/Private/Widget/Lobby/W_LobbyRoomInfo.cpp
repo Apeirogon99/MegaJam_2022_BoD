@@ -30,6 +30,7 @@ void UW_LobbyRoomInfo::NativeOnListItemObjectSet(UObject* ListItemObject)
 	m_maxPlayer->SetText(FText::FromString(FString::FromInt(pItemData->m_info.m_MaximumPlayerSessionCount)));
 	m_location->SetText(FText::FromString(GameLiftUtils::LocationToString(pItemData->m_info.m_Location)));
 
+	SetRoomListParent(pItemData->m_owner);
 	SetRoomInfo(pItemData->m_info);
 }
 

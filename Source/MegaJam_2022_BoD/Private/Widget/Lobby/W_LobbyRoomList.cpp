@@ -57,6 +57,7 @@ void UW_LobbyRoomList::Click_JoinRoom()
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *m_currentClickLevel);
 		UGameplayStatics::OpenLevel(GetWorld(), FName(*m_currentClickLevel), false);
 	}
 }
