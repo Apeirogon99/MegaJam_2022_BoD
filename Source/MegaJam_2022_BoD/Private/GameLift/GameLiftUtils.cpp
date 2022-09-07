@@ -10,3 +10,11 @@ GameLiftUtils::GameLiftUtils()
 GameLiftUtils::~GameLiftUtils()
 {
 }
+
+FString GameLiftUtils::LocationToString(FString location)
+{
+	if (location == "ap-northeast-2")
+		return TEXT("KOR");
+
+	return TEXT("UKNOWN");
+}

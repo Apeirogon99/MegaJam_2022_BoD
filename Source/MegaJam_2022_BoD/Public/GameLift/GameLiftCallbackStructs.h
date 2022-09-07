@@ -16,3 +16,31 @@ public:
 	UPROPERTY()
 		bool Status;
 };
+
+USTRUCT(Atomic, BlueprintType)
+struct FGameSessionsInfo
+{
+	GENERATED_BODY()
+
+public:
+	FGameSessionsInfo();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 m_CurrentPlayerSessionCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 m_MaximumPlayerSessionCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString m_IpAddress;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 m_Port;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString m_Location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString m_Status;
+};

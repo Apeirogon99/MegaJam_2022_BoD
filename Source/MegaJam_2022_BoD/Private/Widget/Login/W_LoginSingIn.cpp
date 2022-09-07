@@ -4,6 +4,7 @@
 #include "Widget/Login/W_LoginSingIn.h"
 #include "Widget/Login/W_LoginSingUp.h"
 #include "Online/Login/PC_Login.h"
+#include "Online/BoD_GameInstance.h"
 #include <Kismet/GameplayStatics.h>
 #include <Components/EditableTextBox.h>
 #include <Components/TextBlock.h>
@@ -81,9 +82,6 @@ void UW_LoginSingIn::Click_SingIn()
 
 void UW_LoginSingIn::AwsLoginInit()
 {
-	Http = &FHttpModule::Get();
-
-	m_ApiGatewayEndpoint = FString::Printf(TEXT("https://llya2kr955.execute-api.ap-northeast-2.amazonaws.com/betaTest01"));
 	m_LoginURI = FString::Printf(TEXT("/singin"));
 }
 
@@ -93,41 +91,34 @@ void UW_LoginSingIn::LoginRequest(FString usr, FString pwd)
 	JsonObject->SetStringField(TEXT("username"), *FString::Printf(TEXT("%s"), *usr));
 	JsonObject->SetStringField(TEXT("password"), *FString::Printf(TEXT("%s"), *pwd));
 
-	FString JsonBody;
-	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&JsonBody);
-	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
-
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> LoginHttpRequest = Http->CreateRequest();
-
-	LoginHttpRequest->SetVerb("POST");
-	LoginHttpRequest->SetURL(m_ApiGatewayEndpoint + m_LoginURI);
-	LoginHttpRequest->SetHeader("Content-Type", "application/json");
-	LoginHttpRequest->SetContentAsString(JsonBody);
-	LoginHttpRequest->OnProcessRequestComplete().BindUObject(this, &UW_LoginSingIn::OnLoginResponse);
-	LoginHttpRequest->ProcessRequest();
+	m_lambda.HttpPostRequset<UW_LoginSingIn>(this, JsonObject, m_LoginURI, &UW_LoginSingIn::OnLoginResponse);
 }
 
 void UW_LoginSingIn::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
-	if (bWasSuccessful) {
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject;
+	if (false == m_lambda.GetResponse(JsonObject, Response, bWasSuccessful))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Fail GetResponse"))
+		return;
+	}
 
-		if (FJsonSerializer::Deserialize(Reader, JsonObject)) {
+	FString Status = JsonObject->GetStringField("status");
+	if (Status == TEXT("success"))
+	{
+		FString IdToken = JsonObject->GetObjectField("tokens")->GetStringField("IdToken");
 
-			FString Status = JsonObject->GetStringField("status");
-			if (Status == TEXT("success"))
-			{
-				FString IdToken = JsonObject->GetObjectField("tokens")->GetStringField("IdToken");
-				FName LobbyName = TEXT("L_Lobby");
-				UGameplayStatics::OpenLevel(GetWorld(), LobbyName);
-			}
-			else
-			{
-				FString msg = JsonObject->GetStringField("msg");
-				m_singInResultLog->SetVisibility(ESlateVisibility::Visible);
-				m_singInResultLog->SetText(FText::FromString(msg));
-			}
-		}
+		UBoD_GameInstance* gameInstance = Cast<UBoD_GameInstance>(GetWorld()->GetGameInstance());
+		gameInstance->m_TokenID = IdToken;
+		gameInstance->m_nickName = m_currentUserName;
+
+		FName LobbyName = TEXT("L_Lobby");
+		UGameplayStatics::OpenLevel(GetWorld(), LobbyName);
+	}
+	else
+	{
+		FString msg = JsonObject->GetStringField("msg");
+		m_singInResultLog->SetVisibility(ESlateVisibility::Visible);
+		m_singInResultLog->SetText(FText::FromString(msg));
 	}
 }
