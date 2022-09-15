@@ -25,9 +25,10 @@ AGM_WaitingRoom::AGM_WaitingRoom()
 
 void AGM_WaitingRoom::BeginPlay()
 {
-	FString description;
+	/*FString description;
 	m_travelLevelName = FString::Printf(TEXT("L_Battle"));
 	TravelLevel(m_travelLevelName, description);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *description);*/
 }
 
 void AGM_WaitingRoom::PostLogin(APlayerController* NewPlayer)
@@ -99,6 +100,14 @@ void AGM_WaitingRoom::TestAWSStartServer()
 	params->logParameters = logfiles;
 
 	gameLiftSdkModule->ProcessReady(*params);
+
+	//FTimerHandle WaitHandle;
+	//float WaitTime = 60.0f * 5.0f;
+	//GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
+	//	{
+	//		gameLiftSdkModule->ProcessEnding();
+
+	//	}), WaitTime, false);
 #endif
 }
 

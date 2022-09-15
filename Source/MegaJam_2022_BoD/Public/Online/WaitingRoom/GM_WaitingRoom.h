@@ -35,7 +35,7 @@ public:
 		void TestAWSStartServer();
 
 protected:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		bool TravelLevel(const FString levelName, FString& Description);
 
 private:

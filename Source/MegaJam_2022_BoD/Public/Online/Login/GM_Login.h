@@ -23,4 +23,7 @@ public:
 
 public:
 	virtual void BeginPlay() override;
+
+public:
+	void GameLiftInit();
 };
