@@ -18,7 +18,7 @@ public:
 	AGS_WaitingRoom();
 
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		bool EnoughPlayers(int32 minPlayers, int32 maxPlayers, FString& description);
 
 	UFUNCTION()

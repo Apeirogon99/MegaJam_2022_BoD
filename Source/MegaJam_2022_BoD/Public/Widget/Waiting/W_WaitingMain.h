@@ -9,9 +9,36 @@
 /**
  * 
  */
+
+class UButton;
+class UTextBlock;
+
 UCLASS()
 class MEGAJAM_2022_BOD_API UW_WaitingMain : public UUserWidget
 {
 	GENERATED_BODY()
+
+protected:
+	//virtual void NativeOnInitialized() override;
+	//virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	//virtual void NativeDestruct() override;
+	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
+
+public:
+	UFUNCTION()
+		void Click_Ready();
 	
+
+private:
+	UPROPERTY(Meta = (BindWidget))
+		UButton* m_Ready;
+
+	UPROPERTY(Meta = (BindWidget))
+		UTextBlock* m_ReadyText;
+
+
+private:
+	UPROPERTY()
+		bool m_isReady;
 };
