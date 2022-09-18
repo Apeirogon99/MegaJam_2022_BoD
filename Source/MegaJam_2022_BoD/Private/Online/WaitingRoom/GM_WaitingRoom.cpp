@@ -37,7 +37,21 @@ void AGM_WaitingRoom::PostLogin(APlayerController* NewPlayer)
 
 	if (NewPlayer != nullptr)
 	{
-		m_players.Add(Cast<AC_WaitingRoom>(NewPlayer));
+		if (IsValid(NewPlayer->GetPawn()))
+		{
+			////Delete old pawn
+			//APawn* oldPawn = NewPlayer->GetPawn();
+			//NewPlayer->UnPossess();
+			//oldPawn->Destroy();
+
+			////Create new pawn
+			//FActorSpawnParameters parm;
+			//APawn* newPawn = Cast<APawn>(GetWorld()->SpawnActor<APC_WaitingRoom>(parm));
+			//NewPlayer->Possess(newPawn);
+		}
+
+		m_players.Add(Cast<APC_WaitingRoom>(NewPlayer));
+		UE_LOG(LogTemp, Log, TEXT("Current Login %d"), m_players.Num());
 	}
 }
 
@@ -109,6 +123,14 @@ void AGM_WaitingRoom::TestAWSStartServer()
 
 	//	}), WaitTime, false);
 #endif
+}
+
+void AGM_WaitingRoom::ProcessChatting(const FString& sender, const FText& message)
+{
+	for (APC_WaitingRoom* playerController : m_players)
+	{
+		playerController->SC_Chatting(sender, message);
+	}
 }
 
 bool AGM_WaitingRoom::TravelLevel(const FString levelName, FString& Description)

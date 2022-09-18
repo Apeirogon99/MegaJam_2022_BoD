@@ -2,36 +2,15 @@
 
 
 #include "Widget/Waiting/W_WaitingMain.h"
-#include <Components/Button.h>
-#include <Components/TextBlock.h>
+#include "Widget/Waiting/W_WaitingChatting.h"
 
 void UW_WaitingMain::NativeConstruct()
 {
-	Super::NativeConstruct();
-
-	m_ReadyText = Cast<UTextBlock>(GetWidgetFromName(TEXT("m_ReadyText")));
-
-	m_Ready = Cast<UButton>(GetWidgetFromName(TEXT("m_Ready")));
-	m_isReady = false;
-
-	m_ReadyText->SetText(FText::FromString(TEXT("READY")));
-
-	if (m_Ready != nullptr)
-	{
-		m_Ready->OnClicked.AddDynamic(this, &UW_WaitingMain::Click_Ready);
-	}
+	m_chatting = Cast<UW_WaitingChatting>(GetWidgetFromName(TEXT("m_chatting")));
+	
 }
 
-void UW_WaitingMain::Click_Ready()
+void UW_WaitingMain::OpenChattingBox()
 {
-	if (m_isReady)
-	{
-		m_isReady = false;
-		m_ReadyText->SetText(FText::FromString(TEXT("READY")));
-	}
-	else
-	{
-		m_isReady = true;
-		m_ReadyText->SetText(FText::FromString(TEXT("CANCLE")));
-	}
+	m_chatting->FocusChatting();
 }

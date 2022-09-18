@@ -17,7 +17,7 @@ class AGS_WaitingRoom;
 class APS_WaitingRoom;
 
 UCLASS()
-class MEGAJAM_2022_BOD_API AGM_WaitingRoom : public AGameMode
+class MEGAJAM_2022_BOD_API AGM_WaitingRoom : public AGameModeBase
 {
 	GENERATED_BODY()
 	
@@ -34,13 +34,19 @@ public:
 	UFUNCTION()
 		void TestAWSStartServer();
 
+public:
+	//RPC
+
+	UFUNCTION()
+	void ProcessChatting(const FString& sender, const FText& message);
+
 protected:
 	UFUNCTION(BlueprintCallable)
 		bool TravelLevel(const FString levelName, FString& Description);
 
-private:
+public:
 	UPROPERTY()
-	TArray<AC_WaitingRoom*> m_players;
+	TArray<APC_WaitingRoom*> m_players;
 
 	UPROPERTY()
 	FString m_travelLevelName;

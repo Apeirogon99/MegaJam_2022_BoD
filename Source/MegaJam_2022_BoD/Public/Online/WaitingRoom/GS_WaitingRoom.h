@@ -10,12 +10,15 @@
  * 
  */
 UCLASS()
-class MEGAJAM_2022_BOD_API AGS_WaitingRoom : public AGameState
+class MEGAJAM_2022_BOD_API AGS_WaitingRoom : public AGameStateBase
 {
 	GENERATED_BODY()
 	
 public:
 	AGS_WaitingRoom();
+
+protected:
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -26,5 +29,5 @@ public:
 
 private:
 
-
+	float DebugTick = 1.0f;
 };

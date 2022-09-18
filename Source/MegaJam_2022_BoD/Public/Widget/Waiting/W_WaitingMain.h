@@ -10,8 +10,7 @@
  * 
  */
 
-class UButton;
-class UTextBlock;
+class UW_WaitingChatting;
 
 UCLASS()
 class MEGAJAM_2022_BOD_API UW_WaitingMain : public UUserWidget
@@ -26,19 +25,12 @@ protected:
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
 public:
-	UFUNCTION()
-		void Click_Ready();
-	
 
-private:
+	UFUNCTION(BlueprintCallable)
+		void OpenChattingBox();
+
+public:
 	UPROPERTY(Meta = (BindWidget))
-		UButton* m_Ready;
+		UW_WaitingChatting* m_chatting;
 
-	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* m_ReadyText;
-
-
-private:
-	UPROPERTY()
-		bool m_isReady;
 };

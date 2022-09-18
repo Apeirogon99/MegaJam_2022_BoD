@@ -2,36 +2,46 @@
 
 
 #include "Online/WaitingRoom/PC_WaitingRoom.h"
+#include "Online/WaitingRoom/GM_WaitingRoom.h"
 #include "Widget/Waiting/W_WaitingMain.h"
+#include "Widget/Waiting/W_WaitingChatting.h"
+#include "Blueprint/UserWidget.h"
+#include <UObject/ConstructorHelpers.h>
+#include <Kismet/GameplayStatics.h>
 
 APC_WaitingRoom::APC_WaitingRoom()
 {
-	LoadWidget();
+
 }
 
 void APC_WaitingRoom::BeginPlay()
 {
 	Super::BeginPlay();
 
-	m_WaitingMain = Cast<UW_WaitingMain>(CreateWaitingWidgets(WaitingWidgetType::MAIN));
+	ClientInitWidget();
 }
 
-void APC_WaitingRoom::LoadWidget()
+bool APC_WaitingRoom::ClientInitWidget_Validate()
 {
-	static ConstructorHelpers::FClassFinder<UW_WaitingMain> WaitingMainWidget(TEXT("Blueprint'/Game/MegaJam_2022_BoD/Widget/Watiting/BW_WaitingMain.BW_WaitingMain_C'"));
-	if (WaitingMainWidget.Succeeded())
+	return true;
+}
+
+void APC_WaitingRoom::ClientInitWidget_Implementation()
+{
+	m_WaitingMain = Cast<UW_WaitingMain>(CreateWidget(GetWorld(), m_WaitingMainClass));
+	if (m_WaitingMain)
 	{
-		m_WaitingMainClass = WaitingMainWidget.Class;
+		m_WaitingMain->AddToViewport();
 	}
 }
 
-UUserWidget* APC_WaitingRoom::CreateWaitingWidgets(WaitingWidgetType type)
+UUserWidget* APC_WaitingRoom::CreateWaitingWidgets(EWaitingWidgetType type)
 {
 	UUserWidget* NewWidgetClass = nullptr;
 
 	switch (type)
 	{
-	case WaitingWidgetType::MAIN:
+	case EWaitingWidgetType::MAIN:
 		NewWidgetClass = CreateWidget(GetWorld(), m_WaitingMainClass);
 		break;
 	default:
@@ -44,4 +54,32 @@ UUserWidget* APC_WaitingRoom::CreateWaitingWidgets(WaitingWidgetType type)
 	}
 
 	return NewWidgetClass;
+}
+
+bool APC_WaitingRoom::CS_Chatting_Validate(const FString& sender, const FText& message)
+{
+	return true;
+}
+
+void APC_WaitingRoom::CS_Chatting_Implementation(const FString& sender, const FText& message)
+{
+	AGM_WaitingRoom* gameMode = Cast<AGM_WaitingRoom>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (gameMode)
+	{
+		gameMode->ProcessChatting(sender, message);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BroadCastChatting : Gamemode is null"));
+	}
+}
+
+bool APC_WaitingRoom::SC_Chatting_Validate(const FString& sender, const FText& message)
+{
+	return true;
+}
+
+void APC_WaitingRoom::SC_Chatting_Implementation(const FString& sender, const FText& message)
+{
+	this->m_WaitingMain->m_chatting->UpdateChatting(sender, message);
 }

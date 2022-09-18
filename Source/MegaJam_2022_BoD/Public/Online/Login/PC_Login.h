@@ -15,7 +15,7 @@ class UW_LoginSingIn;
 class UW_LoginSingUp;
 class UW_LoginVerification;
 
-UENUM()
+UENUM(BlueprintType)
 enum class WidgetType : uint8
 {
 	LOGIN_MAIN,
