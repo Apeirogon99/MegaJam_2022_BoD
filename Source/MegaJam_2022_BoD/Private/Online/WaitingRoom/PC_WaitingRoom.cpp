@@ -2,9 +2,11 @@
 
 
 #include "Online/WaitingRoom/PC_WaitingRoom.h"
+#include "Online/WaitingRoom/PS_WaitingRoom.h"
 #include "Online/WaitingRoom/GM_WaitingRoom.h"
 #include "Widget/Waiting/W_WaitingMain.h"
 #include "Widget/Waiting/W_WaitingChatting.h"
+#include "Widget/Waiting/W_WaitingReady.h"
 #include "Blueprint/UserWidget.h"
 #include <UObject/ConstructorHelpers.h>
 #include <Kismet/GameplayStatics.h>

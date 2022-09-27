@@ -25,12 +25,10 @@ public:
 	AGM_WaitingRoom();
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void Logout(AController* Exiting) override;
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-		bool GameStart();
-
 	UFUNCTION()
 		void TestAWSStartServer();
 
@@ -40,14 +38,32 @@ public:
 	UFUNCTION()
 	void ProcessChatting(const FString& sender, const FText& message);
 
-protected:
 	UFUNCTION(BlueprintCallable)
-		bool TravelLevel(const FString levelName, FString& Description);
+	void ProcessGameReady();
+
+	UFUNCTION(BlueprintCallable)
+	void ProcessStartGame();
+
+	UFUNCTION(BlueprintCallable)
+	void ProcessCancleGame();
+
+protected:
+	UFUNCTION()
+	void UpdateHostPlayer();
 
 public:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<APC_WaitingRoom*> m_players;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	APC_WaitingRoom* m_hostPlayers;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString m_travelLevelName;
+
+	UPROPERTY()
+	int32 m_hostIndex;
+
+	UPROPERTY()
+	bool m_startMatch;
 };
