@@ -3,11 +3,11 @@
 
 #include "Widget/Waiting/W_WaitingMain.h"
 #include "Widget/Waiting/W_WaitingChatting.h"
+#include "Widget/Waiting/W_WaitingReady.h"
 
 void UW_WaitingMain::NativeConstruct()
 {
 	m_chatting = Cast<UW_WaitingChatting>(GetWidgetFromName(TEXT("m_chatting")));
-	
 }
 
 void UW_WaitingMain::OpenChattingBox()

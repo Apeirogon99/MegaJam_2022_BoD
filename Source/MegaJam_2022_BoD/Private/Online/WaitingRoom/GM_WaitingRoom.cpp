@@ -25,69 +25,71 @@ AGM_WaitingRoom::AGM_WaitingRoom()
 
 void AGM_WaitingRoom::BeginPlay()
 {
-	/*FString description;
-	m_travelLevelName = FString::Printf(TEXT("L_Battle"));
-	TravelLevel(m_travelLevelName, description);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *description);*/
+	
 }
 
 void AGM_WaitingRoom::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	if (NewPlayer != nullptr)
+	//if (NewPlayer != nullptr)
+	//{
+	//	APC_WaitingRoom* newController = Cast<APC_WaitingRoom>(NewPlayer);
+	//	if (m_players.Num() == 0)
+	//	{
+	//		m_hostPlayers = newController;
+	//		m_hostIndex = 0;
+	//	}
+
+	//	m_players.Add(newController);
+	//	//UE_LOG(LogTemp, Log, TEXT("Current Login %d"), m_players.Num());
+	//}
+}
+
+void AGM_WaitingRoom::Logout(AController* Exiting)
+{
+	int32 removeIndex = m_players.Find(Cast<APC_WaitingRoom>(Exiting));
+	m_players.RemoveAt(removeIndex);
+}
+
+void AGM_WaitingRoom::ProcessGameReady()
+{
+	AGS_WaitingRoom* gameState = Cast<AGS_WaitingRoom>(GetWorld()->GetGameState());
+	if (gameState)
 	{
-		if (IsValid(NewPlayer->GetPawn()))
+		FTimerHandle WaitHandle;
+		float WaitTime = 5.0f;
+		GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
 		{
-			////Delete old pawn
-			//APawn* oldPawn = NewPlayer->GetPawn();
-			//NewPlayer->UnPossess();
-			//oldPawn->Destroy();
-
-			////Create new pawn
-			//FActorSpawnParameters parm;
-			//APawn* newPawn = Cast<APawn>(GetWorld()->SpawnActor<APC_WaitingRoom>(parm));
-			//NewPlayer->Possess(newPawn);
-		}
-
-		m_players.Add(Cast<APC_WaitingRoom>(NewPlayer));
-		UE_LOG(LogTemp, Log, TEXT("Current Login %d"), m_players.Num());
+				if (gameState->m_isAllReady)
+				{
+					ProcessStartGame();
+				}
+		}), WaitTime, false);
 	}
 }
 
-bool AGM_WaitingRoom::GameStart()
+void AGM_WaitingRoom::ProcessStartGame()
 {
-	FString description;
-	AGS_WaitingRoom* gameState = Cast<AGS_WaitingRoom>(GetWorld()->GetGameState());
-	if (nullptr == gameState)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("GameState is nullptr"));
-		return false;
-	}
+	FString levelName = TEXT("L_Battle");
 
-	//if player length
-	if (false == gameState->EnoughPlayers(1, 10, description))
+	if (GetWorld())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *description);
-		return false;
+		GetWorld()->ServerTravel(levelName);
 	}
+}
 
-	//if ready is false
-	if(false == gameState->GetAllReady(description))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *description);
-		return false;
-	}
+void AGM_WaitingRoom::ProcessCancleGame()
+{
+}
 
-	//Travel Level
-	if (false == TravelLevel(m_travelLevelName, description))
+void AGM_WaitingRoom::UpdateHostPlayer()
+{
+	int32 temp = ++m_hostIndex % m_players.Num();
+	if (m_players[temp])
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *description);
-		return false;
+		m_hostPlayers = m_players[temp];
 	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *description);
-	return true;
 }
 
 void AGM_WaitingRoom::TestAWSStartServer()
@@ -131,24 +133,4 @@ void AGM_WaitingRoom::ProcessChatting(const FString& sender, const FText& messag
 	{
 		playerController->SC_Chatting(sender, message);
 	}
-}
-
-bool AGM_WaitingRoom::TravelLevel(const FString levelName, FString& Description)
-{
-	if (GetWorld())
-	{
-		if (GetWorld()->ServerTravel(levelName))
-		{
-			Description = TEXT("Success ServerTravel");
-			return true;
-		}
-		else
-		{
-			Description = TEXT("Fail ServerTravel");
-			return false;
-		}
-	}
-
-	Description = TEXT("UWorld is nullptr");
-	return false;
 }

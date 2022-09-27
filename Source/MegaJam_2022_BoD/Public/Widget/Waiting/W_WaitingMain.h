@@ -11,6 +11,7 @@
  */
 
 class UW_WaitingChatting;
+class UW_WaitingReady;
 
 UCLASS()
 class MEGAJAM_2022_BOD_API UW_WaitingMain : public UUserWidget

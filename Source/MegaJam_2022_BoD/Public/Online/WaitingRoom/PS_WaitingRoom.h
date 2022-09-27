@@ -16,14 +16,14 @@ class MEGAJAM_2022_BOD_API APS_WaitingRoom : public APlayerState
 	
 public:
 	APS_WaitingRoom();
-
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	UFUNCTION()
-		bool GetReady();
 
-
-private:
-	UPROPERTY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 		bool m_ready;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
+		bool m_host;
 };

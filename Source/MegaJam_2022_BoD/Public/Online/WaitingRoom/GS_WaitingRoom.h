@@ -21,13 +21,9 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-		bool EnoughPlayers(int32 minPlayers, int32 maxPlayers, FString& description);
 
-	UFUNCTION()
-		bool GetAllReady(FString& description);
-
-private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool m_isAllReady;
 
 	float DebugTick = 1.0f;
 };
