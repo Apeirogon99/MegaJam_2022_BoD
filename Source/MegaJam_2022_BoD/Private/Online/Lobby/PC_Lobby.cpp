@@ -8,6 +8,10 @@ APC_Lobby::APC_Lobby()
 	SetShowMouseCursor(true);
 }
 
+void APC_Lobby::UpdateNickName_Implementation()
+{
+}
+
 void APC_Lobby::BeginPlay()
 {
 	Super::BeginPlay();

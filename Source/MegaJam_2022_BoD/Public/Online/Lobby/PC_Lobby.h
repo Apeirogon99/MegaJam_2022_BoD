@@ -17,6 +17,10 @@ class MEGAJAM_2022_BOD_API APC_Lobby : public APlayerController
 public:
 	APC_Lobby();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void UpdateNickName();
+	virtual void UpdateNickName_Implementation();
+
 public:
 	virtual void BeginPlay() override;
 };

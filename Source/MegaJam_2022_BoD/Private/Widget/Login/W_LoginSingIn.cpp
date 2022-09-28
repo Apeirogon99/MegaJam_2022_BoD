@@ -110,7 +110,7 @@ void UW_LoginSingIn::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr R
 
 		UBoD_GameInstance* gameInstance = Cast<UBoD_GameInstance>(GetWorld()->GetGameInstance());
 		gameInstance->m_TokenID = IdToken;
-		gameInstance->m_nickName = m_currentUserName;
+		gameInstance->m_username = m_currentUserName;
 
 		FName LobbyName = TEXT("L_Lobby");
 		UGameplayStatics::OpenLevel(GetWorld(), LobbyName);

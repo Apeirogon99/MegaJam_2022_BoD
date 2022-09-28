@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Http.h"
+#include "Json.h"
+#include "JsonUtilities/Public/JsonUtilities.h"
 
 /**
  * 
