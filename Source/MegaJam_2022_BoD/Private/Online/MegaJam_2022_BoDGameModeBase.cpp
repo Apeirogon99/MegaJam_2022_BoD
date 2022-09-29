@@ -8,7 +8,7 @@
 AMegaJam_2022_BoDGameModeBase::AMegaJam_2022_BoDGameModeBase()
 {
     
-    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/FirstPersonBP/Blueprints/FirstPersonCharacter"));
+    static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/MegaJam_2022_BOD/Online/Battle/FirstPersonCharacter"));
 
     DefaultPawnClass = PlayerPawnBPClass.Class;
 
