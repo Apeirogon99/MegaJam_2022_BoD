@@ -1,0 +1,11 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-RiderShaderInfoDump.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\Activity-22\22 Project\MegaJam AWS\MegaJam_2022_BoD\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\RiderShaderInfoDump.cpp.obj"
+"C:\UnrealEngine-4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+/OUT:"D:\Activity-22\22 Project\MegaJam AWS\MegaJam_2022_BoD\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderShaderInfoDump\UE4Editor-RiderShaderInfoDump.lib"
