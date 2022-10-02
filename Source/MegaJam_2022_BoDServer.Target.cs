@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class MegaJam_2022_BoDServerTarget : TargetRules
 {
-	public MegaJam_2022_BoDServerTarget( TargetInfo Target) : base(Target)
+	public MegaJam_2022_BoDServerTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Server;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
