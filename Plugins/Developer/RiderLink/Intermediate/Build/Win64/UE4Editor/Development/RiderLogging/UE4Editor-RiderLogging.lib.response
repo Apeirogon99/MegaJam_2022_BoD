@@ -6,6 +6,6 @@
 /NAME:"UE4Editor-RiderLogging.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"D:\Activity-22\22 Project\MegaJam AWS\MegaJam_2022_BoD\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLogging\Module.RiderLogging.cpp.obj"
-"C:\UnrealEngine-4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
-/OUT:"D:\Activity-22\22 Project\MegaJam AWS\MegaJam_2022_BoD\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLogging\UE4Editor-RiderLogging.lib"
+"P:\MegaJam_2022_BoD\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLogging\Module.RiderLogging.cpp.obj"
+"C:\Program Files\Epic Games\UnrealEngine-4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+/OUT:"P:\MegaJam_2022_BoD\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLogging\UE4Editor-RiderLogging.lib"
