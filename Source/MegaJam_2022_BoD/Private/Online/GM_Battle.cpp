@@ -2,6 +2,7 @@
 
 
 #include "Online/GM_Battle.h"
+#include "GameLiftServerSDK.h"
 
 AGM_Battle::AGM_Battle()
 {
