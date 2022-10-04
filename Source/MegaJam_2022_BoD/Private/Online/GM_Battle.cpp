@@ -2,7 +2,18 @@
 
 
 #include "Online/GM_Battle.h"
+#include "Online/Battle/PC_Battle.h"
+#include "Online/Battle/PS_Battle.h"
 #include "GameLiftServerSDK.h"
+
+void AGM_Battle::InitSeamlessTravelPlayer(AController* newPlayer)
+{
+    Super::InitSeamlessTravelPlayer(newPlayer);
+
+    m_players.AddUnique(Cast<APC_Battle>(newPlayer));
+
+    OnConnected(Cast<APC_Battle>(newPlayer));
+}
 
 AGM_Battle::AGM_Battle()
 {
@@ -13,6 +24,15 @@ AGM_Battle::AGM_Battle()
     GameLiftLocalTest();
 }
 
+void AGM_Battle::OnConnected_Implementation(APC_Battle* controller)
+{
+}
+
+void AGM_Battle::TravelActorList()
+{
+    
+}
+
 void AGM_Battle::GameLiftLocalTest()
 {
 #if WITH_GAMELIFT
@@ -21,4 +41,9 @@ void AGM_Battle::GameLiftLocalTest()
 
     gameLiftSdkModule->InitSDK();
 #endif
+}
+
+void AGM_Battle::GameLiftEnd()
+{
+
 }
