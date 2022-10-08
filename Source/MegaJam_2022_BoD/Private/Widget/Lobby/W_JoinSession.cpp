@@ -2,6 +2,7 @@
 
 
 #include "Widget/Lobby/W_JoinSession.h"
+#include "Online/BoD_GameInstance.h"
 #include <Components/Button.h>
 #include <Components/EditableTextBox.h>
 #include <Kismet/GameplayStatics.h>
@@ -66,6 +67,9 @@ void UW_JoinSession::OnJoinSessionResponse(FHttpRequestPtr Request, FHttpRespons
 
 	FString IpAddress = JsonObject->GetObjectField("PlayerSession")->GetStringField("IpAddress");
 	FString Port = JsonObject->GetObjectField("PlayerSession")->GetStringField("Port");
+	FString playerID = JsonObject->GetObjectField("PlayerSession")->GetStringField("PlayerSessionId");
+	UBoD_GameInstance* gameInstance = Cast<UBoD_GameInstance>(GetWorld()->GetGameInstance());
+	gameInstance->m_playerSessionID = playerID;
 
 	FString LevelName = IpAddress + ":" + Port;
 

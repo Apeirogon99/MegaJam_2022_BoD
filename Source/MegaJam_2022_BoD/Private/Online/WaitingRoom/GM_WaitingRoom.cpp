@@ -6,7 +6,6 @@
 #include "Online/WaitingRoom/PC_WaitingRoom.h"
 #include "Online/WaitingRoom/GS_WaitingRoom.h"
 #include "Online/WaitingRoom/PS_WaitingRoom.h"
-#include "GameLiftServerSDK.h"
 
 AGM_WaitingRoom::AGM_WaitingRoom()
 {
@@ -49,7 +48,15 @@ void AGM_WaitingRoom::PostLogin(APlayerController* NewPlayer)
 void AGM_WaitingRoom::Logout(AController* Exiting)
 {
 	int32 removeIndex = m_players.Find(Cast<APC_WaitingRoom>(Exiting));
+	
+	//gameLiftSdkModule->RemovePlayerSession();
+
 	m_players.RemoveAt(removeIndex);
+
+	if (m_players.Num() == 0)
+	{
+		ProcessGameEnd();
+	}
 }
 
 void AGM_WaitingRoom::ProcessGameReady()
@@ -83,6 +90,19 @@ void AGM_WaitingRoom::ProcessCancleGame()
 {
 }
 
+void AGM_WaitingRoom::ProcessGameEnd()
+{
+#if WITH_GAMELIFT
+	gameLiftSdkModule->ProcessEnding();
+
+	EvnetGameEnd();
+#endif
+}
+
+void AGM_WaitingRoom::EvnetGameEnd_Implementation()
+{
+}
+
 void AGM_WaitingRoom::UpdateHostPlayer()
 {
 	int32 temp = ++m_hostIndex % m_players.Num();
@@ -96,8 +116,7 @@ void AGM_WaitingRoom::TestAWSStartServer()
 {
 #if WITH_GAMELIFT
 
-	FGameLiftServerSDKModule* gameLiftSdkModule = &FModuleManager::LoadModuleChecked<FGameLiftServerSDKModule>(FName("GameLiftServerSDK"));
-
+	gameLiftSdkModule = &FModuleManager::LoadModuleChecked<FGameLiftServerSDKModule>(FName("GameLiftServerSDK"));
 	gameLiftSdkModule->InitSDK();
 
 	auto onGameSession = [=](Aws::GameLift::Server::Model::GameSession gameSession)
@@ -109,7 +128,7 @@ void AGM_WaitingRoom::TestAWSStartServer()
 	params->OnStartGameSession.BindLambda(onGameSession);
 	params->OnTerminate.BindLambda([=]() {gameLiftSdkModule->ProcessEnding(); });
 	params->OnHealthCheck.BindLambda([]() {return true; });
-	params->port = 7777;
+	params->port;
 
 	TArray<FString> logfiles;
 	logfiles.Add(TEXT("aLogFile.txt"));
@@ -117,13 +136,16 @@ void AGM_WaitingRoom::TestAWSStartServer()
 
 	gameLiftSdkModule->ProcessReady(*params);
 
-	//FTimerHandle WaitHandle;
-	//float WaitTime = 60.0f * 5.0f;
-	//GetWorld()->GetTimerManager().SetTimer(WaitHandle, FTimerDelegate::CreateLambda([&]()
-	//	{
-	//		gameLiftSdkModule->ProcessEnding();
+	auto outCome = Aws::GameLift::Server::GetGameSessionId();
+	if (outCome.IsSuccess())
+	{
+		sessionId = outCome.GetResult();
+	}
+	else
+	{
 
-	//	}), WaitTime, false);
+	}
+
 #endif
 }
 

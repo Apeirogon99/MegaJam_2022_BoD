@@ -30,7 +30,11 @@ public:
 public:
 	void TravelActorList();
 	void GameLiftLocalTest();
-	void GameLiftEnd();
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void GameEnd();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

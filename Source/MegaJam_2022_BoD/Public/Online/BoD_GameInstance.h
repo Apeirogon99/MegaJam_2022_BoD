@@ -23,4 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString m_TokenID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString m_playerSessionID;
 };

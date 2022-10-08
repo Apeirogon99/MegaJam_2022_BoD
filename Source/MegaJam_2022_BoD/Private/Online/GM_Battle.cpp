@@ -43,7 +43,12 @@ void AGM_Battle::GameLiftLocalTest()
 #endif
 }
 
-void AGM_Battle::GameLiftEnd()
+void AGM_Battle::GameEnd()
 {
+    FString levelName = TEXT("L_WaitingRoom");
 
+    if (GetWorld())
+    {
+        GetWorld()->ServerTravel(levelName);
+    }
 }

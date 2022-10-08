@@ -47,6 +47,10 @@ void UW_LobbyCreateSession::OnCreateSessionResponse(FHttpRequestPtr Request, FHt
 	FString IpAddress = JsonObject->GetObjectField("PlayerSession")->GetStringField("IpAddress");
 	FString Port = JsonObject->GetObjectField("PlayerSession")->GetStringField("Port");
 
+	FString playerID = JsonObject->GetObjectField("PlayerSession")->GetStringField("PlayerSessionId");
+	UBoD_GameInstance* gameInstance = Cast<UBoD_GameInstance>(GetWorld()->GetGameInstance());
+	gameInstance->m_playerSessionID = playerID;
+
 	FString LevelName = IpAddress + ":" + Port;
 
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*LevelName), false);

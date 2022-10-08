@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "GameLiftServerSDK.h"
 #include "GM_WaitingRoom.generated.h"
 
 /**
@@ -15,6 +16,8 @@ class AC_WaitingRoom;
 class APC_WaitingRoom;
 class AGS_WaitingRoom;
 class APS_WaitingRoom;
+
+class FGameLiftServerSDKModule;
 
 UCLASS()
 class MEGAJAM_2022_BOD_API AGM_WaitingRoom : public AGameModeBase
@@ -47,6 +50,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ProcessCancleGame();
 
+	UFUNCTION(BlueprintCallable)
+	void ProcessGameEnd();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void EvnetGameEnd();
+	virtual void EvnetGameEnd_Implementation();
+
 protected:
 	UFUNCTION()
 	void UpdateHostPlayer();
@@ -66,4 +76,9 @@ public:
 
 	UPROPERTY()
 	bool m_startMatch;
+
+public:
+	FGameLiftServerSDKModule* gameLiftSdkModule;
+	
+	FString sessionId;
 };
